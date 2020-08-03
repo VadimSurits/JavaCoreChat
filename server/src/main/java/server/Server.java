@@ -5,10 +5,19 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Logger;
 
 public class Server {
     private List<ClientHandler> clients;
     private AuthService authService;
+    private ExecutorService executorService;
+    private static final Logger logger = Logger.getLogger(Server.class.getName());
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
 
     public AuthService getAuthService() {
         return authService;
@@ -16,9 +25,12 @@ public class Server {
 
     public Server() {
         clients = new Vector<>();
+        executorService = Executors.newCachedThreadPool();
+
 //        authService = new SimpleAuthService();
         //==============//
         if (!SQLHandler.connect()) {
+            logger.warning("Не удалось подключиться к БД");
             throw new RuntimeException("Не удалось подключиться к БД");
         }
         authService = new DBAuthServise();
@@ -31,18 +43,22 @@ public class Server {
 
         try {
             server = new ServerSocket(PORT);
-            System.out.println("Сервер запущен!");
+//            System.out.println("Сервер запущен!");
+            logger.info("Сервер запущен!");
 
             while (true) {
                 socket = server.accept();
-                System.out.println("Клиент подключился");
-                System.out.println("socket.getRemoteSocketAddress(): " + socket.getRemoteSocketAddress());
-                System.out.println("socket.getLocalSocketAddress() " + socket.getLocalSocketAddress());
+//                System.out.println("Клиент подключился");
+                logger.info("Клиент подключился");
+//                System.out.println("socket.getRemoteSocketAddress(): " + socket.getRemoteSocketAddress());
+//                System.out.println("socket.getLocalSocketAddress() " + socket.getLocalSocketAddress());
                 new ClientHandler(this, socket);
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
+            SQLHandler.disconnect();
+            executorService.shutdown();
             try {
                 server.close();
             } catch (IOException e) {

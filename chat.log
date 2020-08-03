@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-08-03T15:21:36</date>
+  <millis>1596432096384</millis>
+  <sequence>0</sequence>
+  <logger>server.Server</logger>
+  <level>INFO</level>
+  <class>server.Server</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Сервер запущен!</message>
+</record>
+<record>
+  <date>2020-08-03T15:22:12</date>
+  <millis>1596432132153</millis>
+  <sequence>1</sequence>
+  <logger>server.Server</logger>
+  <level>INFO</level>
+  <class>server.Server</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Клиент подключился</message>
+</record>
